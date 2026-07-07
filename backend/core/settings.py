@@ -1,7 +1,7 @@
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-
+from datetime import timedelta
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users',
+    'authentication',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -82,6 +84,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
