@@ -36,6 +36,7 @@ import { RouterLink } from '@angular/router';
         <div class="nav-links">
           <button mat-stroked-button routerLink="/subscriptions">Subscriptions</button>
           <button mat-stroked-button routerLink="/salary-planner">Salary Planner</button>
+          <button mat-stroked-button routerLink="/reports">Reports</button>
           <button mat-stroked-button (click)="logout()">Logout</button>
         </div>
       </div>

@@ -25,5 +25,10 @@ export const routes: Routes = [
     path: 'salary-planner',
     loadComponent: () => import('./pages/salary-planner/salary-planner').then(m => m.SalaryPlannerComponent),
     canActivate: [AuthGuard]
-  }
+  },
+  {
+  path: 'reports',
+  loadComponent: () => import('./pages/reports/reports').then(m => m.ReportsComponent),
+  canActivate: [AuthGuard]
+}
 ];
