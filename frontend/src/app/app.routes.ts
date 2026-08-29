@@ -15,5 +15,15 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () => import('./pages/dashboard/dashboard').then(m => m.DashboardComponent),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'subscriptions',
+    loadComponent: () => import('./pages/subscriptions/subscriptions').then(m => m.SubscriptionsComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'salary-planner',
+    loadComponent: () => import('./pages/salary-planner/salary-planner').then(m => m.SalaryPlannerComponent),
+    canActivate: [AuthGuard]
   }
 ];
