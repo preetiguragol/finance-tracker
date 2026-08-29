@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { TransactionService, Transaction, Category, MonthlySummary } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
-
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -25,15 +25,19 @@ import { AuthService } from '../../services/auth.service';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    RouterLink
   ],
   template: `
     <div class="dashboard">
-
       <!-- Header -->
       <div class="header">
         <h1>Finance Tracker</h1>
-        <button mat-stroked-button (click)="logout()">Logout</button>
+        <div class="nav-links">
+          <button mat-stroked-button routerLink="/subscriptions">Subscriptions</button>
+          <button mat-stroked-button routerLink="/salary-planner">Salary Planner</button>
+          <button mat-stroked-button (click)="logout()">Logout</button>
+        </div>
       </div>
 
       <!-- Summary Cards -->
@@ -41,25 +45,24 @@ import { AuthService } from '../../services/auth.service';
         <mat-card class="summary-card income">
           <mat-card-content>
             <p class="label">Total Income</p>
-            <p class="amount">₹{{ summary?.total_income || 0 }}</p>
+            <p class="amount">₹{{ summary?.total_income | number:'1.1-1' }}</p>
           </mat-card-content>
         </mat-card>
         <mat-card class="summary-card expense">
           <mat-card-content>
             <p class="label">Total Expenses</p>
-            <p class="amount">₹{{ summary?.total_expense || 0 }}</p>
+            <p class="amount">₹{{ summary?.total_expense | number:'1.1-1' }}</p>
           </mat-card-content>
         </mat-card>
         <mat-card class="summary-card savings">
           <mat-card-content>
             <p class="label">Net Savings</p>
-            <p class="amount">₹{{ summary?.net_savings || 0 }}</p>
+            <p class="amount">₹{{ summary?.net_savings | number:'1.1-1' }}</p>
           </mat-card-content>
         </mat-card>
       </div>
 
       <div class="main-content">
-
         <!-- Add Transaction Form -->
         <mat-card class="form-card">
           <mat-card-header>
@@ -114,9 +117,7 @@ import { AuthService } from '../../services/auth.service';
             <mat-card-title>This Month's Transactions</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div *ngIf="transactions.length === 0" class="empty">
-              No transactions yet. Add one!
-            </div>
+            <div *ngIf="transactions.length === 0" class="empty">No transactions yet. Add one!</div>
             <div *ngFor="let t of transactions" class="transaction-row">
               <div class="t-left">
                 <span class="t-category">{{ t.category_name }}</span>
@@ -124,8 +125,12 @@ import { AuthService } from '../../services/auth.service';
                 <span class="t-date">{{ t.date }}</span>
               </div>
               <div class="t-right">
-                <span class="t-amount" [class.income]="t.transaction_type === 'income'" [class.expense]="t.transaction_type === 'expense'">
-                  {{ t.transaction_type === 'income' ? '+' : '-' }}₹{{ t.amount }}
+                <span
+                  class="t-amount"
+                  [class.income]="t.transaction_type === 'income'"
+                  [class.expense]="t.transaction_type === 'expense'"
+                >
+                  {{ t.transaction_type === 'income' ? '+' : '-' }}₹{{ t.amount | number:'1.1-1' }}
                 </span>
                 <button mat-icon-button color="warn" (click)="deleteTransaction(t.id!)">
                   <mat-icon>delete</mat-icon>
@@ -134,34 +139,108 @@ import { AuthService } from '../../services/auth.service';
             </div>
           </mat-card-content>
         </mat-card>
-
       </div>
     </div>
   `,
-  styles: [`
-    .dashboard { padding: 24px; max-width: 1100px; margin: 0 auto; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .header h1 { margin: 0; font-size: 24px; }
-    .summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-    .summary-card { text-align: center; }
-    .summary-card .label { font-size: 13px; color: #666; margin: 0; }
-    .summary-card .amount { font-size: 26px; font-weight: 600; margin: 8px 0 0; }
-    .summary-card.income .amount { color: #2e7d32; }
-    .summary-card.expense .amount { color: #c62828; }
-    .summary-card.savings .amount { color: #1565c0; }
-    .main-content { display: grid; grid-template-columns: 400px 1fr; gap: 24px; }
-    .full-width { width: 100%; margin-bottom: 12px; }
-    .transaction-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
-    .t-left { display: flex; flex-direction: column; }
-    .t-category { font-weight: 500; font-size: 14px; }
-    .t-note { font-size: 12px; color: #888; }
-    .t-date { font-size: 11px; color: #aaa; }
-    .t-right { display: flex; align-items: center; gap: 8px; }
-    .t-amount { font-weight: 600; font-size: 15px; }
-    .t-amount.income { color: #2e7d32; }
-    .t-amount.expense { color: #c62828; }
-    .empty { text-align: center; color: #aaa; padding: 32px 0; }
-  `]
+  styles: [
+    `
+      .dashboard {
+        padding: 24px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .summary-card {
+        text-align: center;
+      }
+      .summary-card .label {
+        font-size: 13px;
+        color: #666;
+        margin: 0;
+      }
+      .summary-card .amount {
+        font-size: 26px;
+        font-weight: 600;
+        margin: 8px 0 0;
+      }
+      .summary-card.income .amount {
+        color: #2e7d32;
+      }
+      .summary-card.expense .amount {
+        color: #c62828;
+      }
+      .summary-card.savings .amount {
+        color: #1565c0;
+      }
+      .main-content {
+        display: grid;
+        grid-template-columns: 400px 1fr;
+        gap: 24px;
+      }
+      .full-width {
+        width: 100%;
+        margin-bottom: 12px;
+      }
+      .transaction-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .t-left {
+        display: flex;
+        flex-direction: column;
+      }
+      .t-category {
+        font-weight: 500;
+        font-size: 14px;
+      }
+      .t-note {
+        font-size: 12px;
+        color: #888;
+      }
+      .t-date {
+        font-size: 11px;
+        color: #aaa;
+      }
+      .t-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .t-amount {
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .t-amount.income {
+        color: #2e7d32;
+      }
+      .t-amount.expense {
+        color: #c62828;
+      }
+      .empty {
+        text-align: center;
+        color: #aaa;
+        padding: 32px 0;
+      }
+    `,
+  ],
 })
 export class DashboardComponent implements OnInit {
   form: FormGroup;
@@ -177,14 +256,14 @@ export class DashboardComponent implements OnInit {
     private transactionService: TransactionService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.form = this.fb.group({
       transaction_type: ['expense', Validators.required],
       category: ['', Validators.required],
       amount: ['', [Validators.required, Validators.min(1)]],
       date: [new Date(), Validators.required],
-      note: ['']
+      note: [''],
     });
   }
 
@@ -195,31 +274,32 @@ export class DashboardComponent implements OnInit {
   }
 
   loadCategories(): void {
-    this.transactionService.getCategories().subscribe(cats => {
+    this.transactionService.getCategories().subscribe((cats) => {
       this.categories = cats;
       this.filterCategories();
     });
   }
 
   loadTransactions(): void {
-  this.transactionService.getTransactions({
-    month: this.currentMonth,
-    year: this.currentYear
-  }).subscribe(data => {
-    this.transactions = data;
-    this.cdr.detectChanges();
-  });
-}
+    this.transactionService
+      .getTransactions({
+        month: this.currentMonth,
+        year: this.currentYear,
+      })
+      .subscribe((data) => {
+        this.transactions = data;
+        this.cdr.detectChanges();
+      });
+  }
 
   loadSummary(): void {
-  this.transactionService.getMonthlySummary(
-    this.currentMonth,
-    this.currentYear
-  ).subscribe(data => {
-    this.summary = data;
-    this.cdr.detectChanges();
-  });
-}
+    this.transactionService
+      .getMonthlySummary(this.currentMonth, this.currentYear)
+      .subscribe((data) => {
+        this.summary = data;
+        this.cdr.detectChanges();
+      });
+  }
 
   onTypeChange(): void {
     this.form.patchValue({ category: '' });
@@ -228,7 +308,7 @@ export class DashboardComponent implements OnInit {
 
   filterCategories(): void {
     const type = this.form.get('transaction_type')?.value;
-    this.filteredCategories = this.categories.filter(c => c.category_type === type);
+    this.filteredCategories = this.categories.filter((c) => c.category_type === type);
   }
 
   onSubmit(): void {
@@ -236,7 +316,7 @@ export class DashboardComponent implements OnInit {
       const val = this.form.value;
       const payload: Transaction = {
         ...val,
-        date: new Date(val.date).toISOString().split('T')[0]
+        date: new Date(val.date).toISOString().split('T')[0],
       };
 
       this.transactionService.createTransaction(payload).subscribe({
@@ -246,7 +326,7 @@ export class DashboardComponent implements OnInit {
           this.loadTransactions();
           this.loadSummary();
         },
-        error: () => this.snackBar.open('Failed to add transaction', 'Close', { duration: 2000 })
+        error: () => this.snackBar.open('Failed to add transaction', 'Close', { duration: 2000 }),
       });
     }
   }
@@ -257,7 +337,7 @@ export class DashboardComponent implements OnInit {
         this.snackBar.open('Deleted!', 'Close', { duration: 2000 });
         this.loadTransactions();
         this.loadSummary();
-      }
+      },
     });
   }
 
