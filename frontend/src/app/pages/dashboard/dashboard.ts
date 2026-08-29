@@ -150,35 +150,42 @@ import { RouterLink } from '@angular/router';
         max-width: 1100px;
         margin: 0 auto;
       }
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-      }
+      .header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
       .header h1 {
-        margin: 0;
-        font-size: 24px;
+         margin: 0; font-size: 22px; font-weight: 600; color: #333;
       }
-      .summary-cards {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-        margin-bottom: 24px;
-      }
-      .summary-card {
-        text-align: center;
-      }
-      .summary-card .label {
-        font-size: 13px;
-        color: #666;
-        margin: 0;
-      }
-      .summary-card .amount {
-        font-size: 26px;
-        font-weight: 600;
-        margin: 8px 0 0;
-      }
+         .nav-links { display: flex; gap: 10px; }
+      .summary-cards { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 16px; 
+  margin-bottom: 24px; 
+}
+      .summary-card { 
+  text-align: center; 
+  border-radius: 12px;
+  transition: transform 0.2s;
+}
+  .summary-card:hover { transform: translateY(-2px); }
+      .summary-card .label { 
+  font-size: 12px; 
+  color: #888; 
+  margin: 0; 
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+     .summary-card .amount { 
+  font-size: 28px; 
+  font-weight: 700; 
+  margin: 8px 0 0; 
+}
       .summary-card.income .amount {
         color: #2e7d32;
       }

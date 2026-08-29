@@ -36,11 +36,28 @@ import { AuthService } from '../../services/auth.service';
     </div>
   `,
   styles: [`
-    .auth-container { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f5f5f5; }
-    .auth-card { width: 400px; padding: 24px; }
-    .full-width { width: 100%; margin-bottom: 16px; }
-    .error { color: red; font-size: 13px; }
-    .link { text-align: center; margin-top: 12px; font-size: 13px; }
+    .auth-container { 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  height: 100vh; 
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.auth-card { 
+  width: 400px; 
+  padding: 32px;
+  border-radius: 16px !important;
+}
+.auth-card mat-card-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.full-width { width: 100%; margin-bottom: 16px; }
+.error { color: #c62828; font-size: 13px; margin-bottom: 8px; }
+.link { text-align: center; margin-top: 16px; font-size: 13px; color: #666; }
+.link a { color: #667eea; text-decoration: none; font-weight: 500; }
   `]
 })
 export class LoginComponent {
